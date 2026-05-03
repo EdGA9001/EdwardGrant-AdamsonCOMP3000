@@ -14,7 +14,8 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 import java.util.Calendar;
 
-public class MathsPuzzle extends AppCompatActivity{
+
+public class MainActivity extends AppCompatActivity{
     TimePicker alarmTimePicker;
     PendingIntent pendingIntent;
     AlarmManager alarmManager;
@@ -46,7 +47,7 @@ public class MathsPuzzle extends AppCompatActivity{
     public void OnToggleClicked(View view) {
         long time;
         if (((ToggleButton) view).isChecked()) {
-            Toast.makeText(MathsPuzzle.this, "ALARM ON", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "ALARM ON", Toast.LENGTH_SHORT).show();
             Calendar calendar = Calendar.getInstance();
 
             calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getHour());
@@ -67,8 +68,7 @@ public class MathsPuzzle extends AppCompatActivity{
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 60000, pendingIntent);
         } else {
             alarmManager.cancel(pendingIntent);
-            Toast.makeText(MathsPuzzle.this, "ALARM OFF", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "ALARM OFF", Toast.LENGTH_SHORT).show();
         }
     }
-
 }
