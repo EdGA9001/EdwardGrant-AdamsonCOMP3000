@@ -18,12 +18,14 @@ import android.content.pm.PackageManager;
 import android.util.Log;
 import androidx.core.content.ContextCompat;
 import androidx.core.app.ActivityCompat;
-
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity{
     TimePicker alarmTimePicker;
     PendingIntent pendingIntent;
     AlarmManager alarmManager;
+
+    private long displayTime = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,31 +57,26 @@ public class MainActivity extends AppCompatActivity{
 
     //Alarm on/off button
     public void OnToggleClicked(View view) {
-        long time;
+        long time = -1;
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getHour());
+        calendar.set(Calendar.MINUTE, alarmTimePicker.getMinute());
+        time = (calendar.getTimeInMillis() - (calendar.getTimeInMillis() % 60000));
+
+        displayTime = time;
+        String formattedTime = android.text.format.DateFormat.getTimeFormat(this).format(new Date(displayTime));
+
         if (((ToggleButton) view).isChecked()) {
-            Toast.makeText(MainActivity.this, "ALARM ON", Toast.LENGTH_SHORT).show();
-            Calendar calendar = Calendar.getInstance();
-
-            calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getHour());
-            calendar.set(Calendar.MINUTE, alarmTimePicker.getMinute());
+            Toast.makeText(this, "ALARM ON: " + formattedTime, Toast.LENGTH_SHORT).show();
+            if (System.currentTimeMillis() > time) time += 24 * 60 * 60 * 1000;
             Intent intent = new Intent(this, AlarmReceiver.class);
-            pendingIntent = PendingIntent.getBroadcast(this, 0, intent,
-                    PendingIntent.FLAG_IMMUTABLE);
-
-            //set AM/PM
-            time = (calendar.getTimeInMillis() - (calendar.getTimeInMillis() % 60000));
-            if (System.currentTimeMillis() > time) {
-                if (Calendar.AM_PM == 0)
-                    time = time + (1000 * 60 * 60 * 12);
-                else
-                    time = time + (1000 * 60 * 60 * 24);
-            }
-            //continuous ringing alarm - the user need to toggle the alarm off with the button in app for now
-            //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 10000, pendingIntent);
+            pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
             alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pendingIntent);
         } else {
             alarmManager.cancel(pendingIntent);
-            Toast.makeText(MainActivity.this, "ALARM OFF", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "ALARM OFF: " + formattedTime, Toast.LENGTH_SHORT).show();
+            displayTime = -1;
         }
     }
 }
@@ -96,4 +93,7 @@ TextView changingText = findViewById(R.id.textView);
             String s = input.getText().toString();
             modifyText.setText(s);
         });
+
+        //continuous ringing alarm - the user need to toggle the alarm off with the button in app for now
+        //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 10000, pendingIntent);
  */
