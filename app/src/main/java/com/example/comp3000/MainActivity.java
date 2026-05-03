@@ -19,6 +19,9 @@ import android.util.Log;
 import androidx.core.content.ContextCompat;
 import androidx.core.app.ActivityCompat;
 import java.util.Date;
+import java.util.ArrayList;
+import java.util.Collections;
+
 
 public class MainActivity extends AppCompatActivity{
     TimePicker alarmTimePicker;
@@ -26,6 +29,8 @@ public class MainActivity extends AppCompatActivity{
     AlarmManager alarmManager;
 
     private long displayTime = -1;
+
+    private final ArrayList<Long> alarmTimes = new ArrayList<>(Collections.singletonList(-1L));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +69,20 @@ public class MainActivity extends AppCompatActivity{
         calendar.set(Calendar.MINUTE, alarmTimePicker.getMinute());
         time = (calendar.getTimeInMillis() - (calendar.getTimeInMillis() % 60000));
 
-        displayTime = time;
-        String formattedTime = android.text.format.DateFormat.getTimeFormat(this).format(new Date(displayTime));
+        alarmTimes.set(0, time);
+        String formattedTime = android.text.format.DateFormat.getTimeFormat(this).format(new Date(alarmTimes.get(0)));
+        //displayTime = time;
+        //String formattedTime = android.text.format.DateFormat.getTimeFormat(this).format(new Date(displayTime));
+
+        TextView modifyText = findViewById(R.id.textView);
+        Button submit = findViewById(R.id.button);
+
+        submit.setOnClickListener(v -> modifyText.append(formattedTime + "\n"));
+
+        //submit.setOnClickListener(v -> {
+        //    String s = formattedTime;//input.getText().toString();
+        //    modifyText.setText(s);
+        //});
 
         if (((ToggleButton) view).isChecked()) {
             Toast.makeText(this, "ALARM ON: " + formattedTime, Toast.LENGTH_SHORT).show();

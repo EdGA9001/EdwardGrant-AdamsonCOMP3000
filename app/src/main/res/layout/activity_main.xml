@@ -56,7 +56,7 @@
         android:id="@+id/button"
         android:text="change"
         app:layout_constraintHorizontal_bias="0.35"
-        app:layout_constraintVertical_bias="0.75"
+        app:layout_constraintVertical_bias="0.55"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
