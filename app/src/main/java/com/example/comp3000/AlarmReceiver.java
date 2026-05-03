@@ -1,4 +1,3 @@
-/*Alarm not working
 package com.example.comp3000;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,16 +10,39 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.util.Log;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 
-//Warning: ALARM WILL GO OFF ABOUT A MINUTE LATE RIGHT NOW
+//Warning: ALARM MAY GO OFF 2 MINS LATE
 public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.d("AlarmReceiver", "Alarm fired!");
+
+        NotificationChannel channel = new NotificationChannel("alarm_channel", "Alarm", NotificationManager.IMPORTANCE_HIGH);
+        context.getSystemService(NotificationManager.class).createNotificationChannel(channel);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "alarm_channel")
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .setContentTitle("Alarm!")
-                .setContentText("Wake up! Wake up!")
+                .setContentText("Wakey wakey!");
+
+        NotificationManagerCompat.from(context).notify(1, builder.build());
+        /*
+        NotificationChannel channel = new NotificationChannel(
+                "alarm_channel",
+                "Alarm Notifications",
+                NotificationManager.IMPORTANCE_HIGH
+        );
+        channel.setDescription("Notifications for alarms");
+        NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "alarm_channel")
+                .setSmallIcon(android.R.drawable.ic_dialog_info)
+                .setContentTitle("Alarm!")
+                .setContentText("Wakey wakey!")
                 .setAutoCancel(true);
 
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
@@ -36,9 +58,9 @@ public class AlarmReceiver extends BroadcastReceiver {
         //plays default ringtone
         Ringtone ringtone = RingtoneManager.getRingtone(context, alarmUri);
         ringtone.play();
+*/
     }
 }
-*/
 
 /*
 package com.example.comp3000;
@@ -92,7 +114,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 }
 */
 
-
+/*
 package com.example.comp3000;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -111,7 +133,6 @@ public class AlarmReceiver extends BroadcastReceiver {
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void onReceive(Context context, Intent intent) {
-        //temporary outdated vibration method
         Log.d("AlarmReceiver", "Alarm fired!");
 
         Toast.makeText(context, "Alarm! Wake up! Wake up!", Toast.LENGTH_LONG).show();
@@ -125,3 +146,4 @@ public class AlarmReceiver extends BroadcastReceiver {
         ringtone.play();
     }
 }
+*/
