@@ -49,7 +49,7 @@
         app:layout_constraintTop_toBottomOf="@+id/toggleButton"
         />
 
-    <!-- old textview to verify alarms were being set-->
+    <!-- old textview to verify alarms were being set
     <TextView
         android:id="@+id/textView"
         android:text="Testing data will appear here:"
@@ -62,6 +62,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />
+    -->
 
     <!--old toggle button: by default set to false/off-->
     <!--

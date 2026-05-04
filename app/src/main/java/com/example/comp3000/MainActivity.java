@@ -111,12 +111,6 @@ public class MainActivity extends AppCompatActivity{
             }
 
             runOnUiThread(() -> {
-                TextView modifyText = findViewById(R.id.textView);
-                modifyText.setText("");
-                for (String timeStr : formattedTimes) {
-                    modifyText.append(timeStr + "\n");
-                }
-
                 updateAlarmList(formattedTimes);
             });
         }).start();
@@ -132,8 +126,15 @@ public class MainActivity extends AppCompatActivity{
     }
 }
 
-/*old threading
+/*no longer needed to test alarms are being added
+                TextView modifyText = findViewById(R.id.textView);
+                modifyText.setText("");
+                for (String timeStr : formattedTimes) {
+                    modifyText.append(timeStr + "\n");
+                }
+*/
 
+/*old threading
 runOnUiThread(() -> {
         LinearLayout alarmList = findViewById(R.id.alarmListContainer);
         alarmList.removeAllViews();
