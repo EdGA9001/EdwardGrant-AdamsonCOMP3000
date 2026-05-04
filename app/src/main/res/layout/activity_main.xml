@@ -42,7 +42,7 @@
 
     <TextView
         android:id="@+id/textView"
-        android:text="Answer will appear here."
+        android:text="Testing data will appear here:"
         app:layout_constraintHorizontal_bias="0.2"
         app:layout_constraintVertical_bias="0.79"
         android:layout_width="wrap_content"

@@ -17,10 +17,10 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.util.Log;
 import androidx.core.content.ContextCompat;
-import androidx.core.app.ActivityCompat;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.Collections;
+import androidx.appcompat.app.AlertDialog;
 
 public class MainActivity extends AppCompatActivity{
     TimePicker alarmTimePicker;
@@ -59,6 +59,10 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
+    private String formatAlarmTime(long alarmTimeMillis) {
+        return android.text.format.DateFormat.getTimeFormat(this).format(new Date(alarmTimeMillis));
+    }
+
     //Alarm on/off button
     public void OnToggleClicked(View view) {
         long time = -1;
@@ -68,30 +72,102 @@ public class MainActivity extends AppCompatActivity{
         calendar.set(Calendar.MINUTE, alarmTimePicker.getMinute());
         time = (calendar.getTimeInMillis() - (calendar.getTimeInMillis() % 60000));
 
-        alarmTimes.set(0, time);
+        if (alarmTimes.contains(time)) {
+            Toast.makeText(this, "Alarm already exists", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        alarmTimes.add(0, time);
+        //for now limiting alarms at risk of overwhelming the UI for the user
+        if (alarmTimes.size() > 5) {
+            alarmTimes.remove(5);
+        }
         String formattedTime = android.text.format.DateFormat.getTimeFormat(this).format(new Date(alarmTimes.get(0)));
-        //displayTime = time;
-        //String formattedTime = android.text.format.DateFormat.getTimeFormat(this).format(new Date(displayTime));
 
         if (((ToggleButton) view).isChecked()) {
-            Toast.makeText(this, "ALARM ON: " + formattedTime, Toast.LENGTH_SHORT).show();
-            if (System.currentTimeMillis() > time) time += 24 * 60 * 60 * 1000;
-            Intent intent = new Intent(this, AlarmReceiver.class);
-            pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
-            alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+            showConfirmDialog(formattedTime, time, (ToggleButton) view);
         } else {
             alarmManager.cancel(pendingIntent);
             Toast.makeText(this, "ALARM OFF: " + formattedTime, Toast.LENGTH_SHORT).show();
             displayTime = -1;
         }
     }
+    private void showConfirmDialog(String formattedTime, long time, ToggleButton btn) {
+        new AlertDialog.Builder(this)
+                .setTitle("Confirm Alarm")
+                .setMessage("Set alarm for " + formattedTime + "?")
+                .setPositiveButton("Confirm", (d, w) -> setAlarm(formattedTime, time))
+                .setNegativeButton("Cancel", (d, w) -> btn.setChecked(false))
+                .show();
+    }
+
+    private void setAlarm(String formattedTime, long time) {
+        Toast.makeText(this, "ALARM ON: " + formattedTime, Toast.LENGTH_SHORT).show();
+        if (System.currentTimeMillis() > time) time += 24 * 60 * 60 * 1000;
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+        alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+
+        //TextView modifyText = findViewById(R.id.textView);
+        //modifyText.append(formattedTime + "\n");
+
+        TextView modifyText = findViewById(R.id.textView);
+        modifyText.setText(""); // Clear textView
+        for (long alarmTime : alarmTimes) {
+            if (alarmTime != -1) {
+                String timeString = android.text.format.DateFormat.getTimeFormat(this).format(new Date(alarmTime));
+                modifyText.append(formatAlarmTime(alarmTime) + "\n");
+            }
+        }
+    }
 }
+
+/*old way a method used to work:
+    public void OnToggleClicked(View view) {
+        long time = -1;
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getHour());
+        calendar.set(Calendar.MINUTE, alarmTimePicker.getMinute());
+        time = (calendar.getTimeInMillis() - (calendar.getTimeInMillis() % 60000));
+
+        alarmTimes.add(0, time);
+        //for now limiting alarms at risk of overwhelming the UI for the user
+        if (alarmTimes.size() > 5) {
+            alarmTimes.remove(5);
+        }
+        String formattedTime = android.text.format.DateFormat.getTimeFormat(this).format(new Date(alarmTimes.get(0)));
+        /*
+        //displayTime = time;
+        //String formattedTime = android.text.format.DateFormat.getTimeFormat(this).format(new Date(displayTime));
+
+        TextView modifyText = findViewById(R.id.textView);
+        Button submit = findViewById(R.id.toggleButton);
+
+        submit.setOnClickListener(v -> modifyText.append(formattedTime + "\n"));
+
+
+        if (((ToggleButton) view).isChecked()) {
+
+Toast.makeText(this, "ALARM ON: " + formattedTime, Toast.LENGTH_SHORT).show();
+if (System.currentTimeMillis() > time) time += 24 * 60 * 60 * 1000;
+Intent intent = new Intent(this, AlarmReceiver.class);
+pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+showConfirmDialog(formattedTime, time, (ToggleButton) view);
+        } else {
+        alarmManager.cancel(pendingIntent);
+            Toast.makeText(this, "ALARM OFF: " + formattedTime, Toast.LENGTH_SHORT).show();
+displayTime = -1;
+        }
+        }
+ */
 
 /*old test code
 TextView modifyText = findViewById(R.id.textView);
-        Button submit = findViewById(R.id.button);
+Button submit = findViewById(R.id.button);
 
-        submit.setOnClickListener(v -> modifyText.append(formattedTime + "\n"));
+submit.setOnClickListener(v -> modifyText.append(formattedTime + "\n"));
 
         //submit.setOnClickListener(v -> {
         //    String s = formattedTime;//input.getText().toString();
