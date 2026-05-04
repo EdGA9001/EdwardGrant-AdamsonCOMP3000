@@ -20,6 +20,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Log.d("AlarmReceiver", "Alarm fired!");
 
+        new Thread(() -> {
         NotificationChannel channel = new NotificationChannel("alarm_channel", "Alarm", NotificationManager.IMPORTANCE_HIGH);
         context.getSystemService(NotificationManager.class).createNotificationChannel(channel);
 
@@ -29,6 +30,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setContentText("Wakey wakey!");
 
         NotificationManagerCompat.from(context).notify(1, builder.build());
+        }).start();
     }
 }
 
