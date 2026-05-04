@@ -7,20 +7,8 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     tools:ignore="HardcodedText"
+    android:background="#AA33FF"
     >
-
-    <EditText
-        android:id="@+id/editText"
-        android:hint="Answer here."
-        app:layout_constraintHorizontal_bias="0.2"
-        app:layout_constraintVertical_bias="0.7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
 
     <TimePicker
         android:id="@+id/timePicker"
@@ -35,7 +23,7 @@
         android:layout_gravity="center"
         />
 
-    <!--User can toggle alarm, by default set to false/off-->
+    <!--By default set to false/off-->
     <ToggleButton
         android:id="@+id/toggleButton"
         android:layout_gravity="center"
@@ -43,19 +31,6 @@
         android:checked="false"
         android:onClick="OnToggleClicked"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.55"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
-
-    <Button
-        android:id="@+id/button"
-        android:text="change"
-        app:layout_constraintHorizontal_bias="0.35"
         app:layout_constraintVertical_bias="0.55"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -77,4 +52,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />
+
+<!--old test button
+    <Button
+        android:id="@+id/button"
+        android:text="change"
+        app:layout_constraintHorizontal_bias="0.35"
+        app:layout_constraintVertical_bias="0.55"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+            <EditText
+        android:id="@+id/editText"
+        android:hint="Answer here."
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintVertical_bias="0.7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+-->
 </androidx.constraintlayout.widget.ConstraintLayout>

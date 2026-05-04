@@ -22,7 +22,6 @@ import java.util.Date;
 import java.util.ArrayList;
 import java.util.Collections;
 
-
 public class MainActivity extends AppCompatActivity{
     TimePicker alarmTimePicker;
     PendingIntent pendingIntent;
@@ -74,16 +73,6 @@ public class MainActivity extends AppCompatActivity{
         //displayTime = time;
         //String formattedTime = android.text.format.DateFormat.getTimeFormat(this).format(new Date(displayTime));
 
-        TextView modifyText = findViewById(R.id.textView);
-        Button submit = findViewById(R.id.button);
-
-        submit.setOnClickListener(v -> modifyText.append(formattedTime + "\n"));
-
-        //submit.setOnClickListener(v -> {
-        //    String s = formattedTime;//input.getText().toString();
-        //    modifyText.setText(s);
-        //});
-
         if (((ToggleButton) view).isChecked()) {
             Toast.makeText(this, "ALARM ON: " + formattedTime, Toast.LENGTH_SHORT).show();
             if (System.currentTimeMillis() > time) time += 24 * 60 * 60 * 1000;
@@ -99,6 +88,16 @@ public class MainActivity extends AppCompatActivity{
 }
 
 /*old test code
+TextView modifyText = findViewById(R.id.textView);
+        Button submit = findViewById(R.id.button);
+
+        submit.setOnClickListener(v -> modifyText.append(formattedTime + "\n"));
+
+        //submit.setOnClickListener(v -> {
+        //    String s = formattedTime;//input.getText().toString();
+        //    modifyText.setText(s);
+        //});
+
 TextView changingText = findViewById(R.id.textView);
         changingText.setText("woah!");
 

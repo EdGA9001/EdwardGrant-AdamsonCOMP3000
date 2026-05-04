@@ -29,6 +29,9 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setContentText("Wakey wakey!");
 
         NotificationManagerCompat.from(context).notify(1, builder.build());
+    }
+}
+
         /*
         NotificationChannel channel = new NotificationChannel(
                 "alarm_channel",
@@ -59,8 +62,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         Ringtone ringtone = RingtoneManager.getRingtone(context, alarmUri);
         ringtone.play();
 */
-    }
-}
 
 /*
 package com.example.comp3000;

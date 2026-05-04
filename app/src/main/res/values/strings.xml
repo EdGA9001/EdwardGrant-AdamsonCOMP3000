@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">COMP3000</string>
+    <string name="app_name">Late Bird</string>
 </resources>
+
+<!--
+<color name="purple1">#AD27F5</color>
+-->
