@@ -7,6 +7,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -22,6 +23,10 @@ import java.util.Collections;
 import androidx.appcompat.app.AlertDialog;
 import android.widget.LinearLayout;
 import android.app.AlarmManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 
 public class MainActivity extends AppCompatActivity{
     TimePicker alarmTimePicker;
@@ -41,6 +46,20 @@ public class MainActivity extends AppCompatActivity{
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         requestNotificationPermission();
+
+        Log.d("ScreenState", "NTS reaally should be in its own method");
+        TextView statusView = findViewById(R.id.statusTextView);
+
+        SharedPreferences prefs = getSharedPreferences("screen", MODE_PRIVATE);
+        long lastScreenOn = prefs.getLong("lastScreenOn", 0);
+        long oneHourAgo = System.currentTimeMillis() - (60 * 60 * 1000);
+
+
+        if (lastScreenOn > oneHourAgo) {
+            statusView.setText("Screen was on recently");
+        } else {
+            statusView.setText("Screen hasn't been on in past hour");
+        }
     }
 
     private void requestNotificationPermission() {
@@ -77,9 +96,10 @@ public class MainActivity extends AppCompatActivity{
             return;
         }
 
+        //given the nature of this app, 1 dynamic alarm shall be the focus but more can be enabled
         alarmTimes.add(0, time);
-        if (alarmTimes.size() > 2) {
-            alarmTimes.remove(2);
+        if (alarmTimes.size() > 1) {
+            alarmTimes.remove(1);
         }
         String formattedTime = formatAlarmTime(time);
         showConfirmDialog(formattedTime, time, null);

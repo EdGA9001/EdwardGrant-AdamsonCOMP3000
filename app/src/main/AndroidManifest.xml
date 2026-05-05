@@ -31,5 +31,11 @@
             android:enabled="true"
             android:exported="false"
         />
+
+        <receiver android:name=".ScreenStateReceiver" android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.SCREEN_ON" />
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>
