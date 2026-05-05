@@ -1,4 +1,5 @@
 package com.example.comp3000;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Button;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import androidx.appcompat.app.AlertDialog;
 import android.widget.LinearLayout;
+import android.app.AlarmManager;
 
 public class MainActivity extends AppCompatActivity{
     TimePicker alarmTimePicker;
@@ -76,8 +78,8 @@ public class MainActivity extends AppCompatActivity{
         }
 
         alarmTimes.add(0, time);
-        if (alarmTimes.size() > 5) {
-            alarmTimes.remove(5);
+        if (alarmTimes.size() > 2) {
+            alarmTimes.remove(2);
         }
         String formattedTime = formatAlarmTime(time);
         showConfirmDialog(formattedTime, time, null);
@@ -92,8 +94,9 @@ public class MainActivity extends AppCompatActivity{
                 .show();
     }
 
-
     private void setAlarm(String formattedTime, long time) {
+        Log.d("setAlarm", "Alarm set!");
+
         Toast.makeText(this, "ALARM ON: " + formattedTime, Toast.LENGTH_SHORT).show();
         if (System.currentTimeMillis() > time) time += 24 * 60 * 60 * 1000;
         Intent intent = new Intent(this, AlarmReceiver.class);

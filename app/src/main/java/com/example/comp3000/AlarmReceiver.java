@@ -13,14 +13,15 @@ import android.content.pm.PackageManager;
 import android.util.Log;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.SharedPreferences;
+import java.util.Calendar;
 
-//Warning: ALARM MAY GO OFF 2 MINS LATE
+//for debugging may have to wait 30+seconds to confirm alarm isn't working before going wild fixing it
 public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("AlarmReceiver", "Alarm fired!");
 
-        new Thread(() -> {
         NotificationChannel channel = new NotificationChannel("alarm_channel", "Alarm", NotificationManager.IMPORTANCE_HIGH);
         context.getSystemService(NotificationManager.class).createNotificationChannel(channel);
 
@@ -29,7 +30,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setContentTitle("Alarm!")
                 .setContentText("Wakey wakey!");
 
+        Log.d("AlarmReceiver", "Notification should have been received");
         NotificationManagerCompat.from(context).notify(1, builder.build());
-        }).start();
     }
 }
