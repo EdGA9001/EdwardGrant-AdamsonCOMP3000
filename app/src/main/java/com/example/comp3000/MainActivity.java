@@ -1,4 +1,8 @@
 package com.example.comp3000;
+import android.media.MediaPlayer;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Button;
@@ -20,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import androidx.appcompat.app.AlertDialog;
 import android.widget.LinearLayout;
+import android.media.MediaPlayer;
 
 public class MainActivity extends AppCompatActivity{
     TimePicker alarmTimePicker;
@@ -39,6 +44,9 @@ public class MainActivity extends AppCompatActivity{
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         requestNotificationPermission();
+
+        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.alarm);
+        mediaPlayer.start();
     }
 
     private void requestNotificationPermission() {
