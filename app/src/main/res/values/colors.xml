@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#6B5B8C</color>
-    <color name="colorPrimaryDark">#6A1191</color>
-    <color name="colorAccent">#33004f</color>
+    <color name="colorPrimaryDark">#600f84</color>
+    <color name="colorAccent">#5c068a</color>
+    <color name="colorError">#FF1111</color>
 </resources>
 
 <!--
@@ -14,5 +15,4 @@
     <color name="colorSurface">#AD27F5</color>
     <color name="colorOnBackground">#AD27F5</color>
     <color name="colorOnSurface">#AD27F5</color>
-    <color name="colorError">#AD27F5</color>
 -->

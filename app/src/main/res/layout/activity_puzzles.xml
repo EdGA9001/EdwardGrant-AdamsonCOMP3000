@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.3"
+        app:layout_constraintVertical_bias="0.2"
         android:textSize="30sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -28,7 +28,7 @@
         android:layout_margin="20dp"
         android:onClick="submitPuzzle"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.42"
+        app:layout_constraintVertical_bias="0.32"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -67,19 +67,15 @@
 
     <androidx.camera.view.PreviewView
         android:id="@+id/cameraPreview"
-        android:layout_width="237dp"
-        android:layout_height="379dp"
-        tools:layout_editor_absoluteX="87dp"
-        tools:layout_editor_absoluteY="348dp"
+        android:layout_width="273dp"
+        android:layout_height="408dp"
         android:layout_gravity="center"
         android:layout_margin="20dp"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.95"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintVertical_bias="0.91" />
 
     <TextView
         android:id="@+id/targetObjectView"
