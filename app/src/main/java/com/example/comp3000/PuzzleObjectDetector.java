@@ -41,6 +41,35 @@ public class PuzzleObjectDetector {
                         try {
                             if (!detectedObjects.isEmpty()) {
                                 Log.d("ObjectDetection", "INSIDE IF BLOCK");
+                                boolean foundTargetObject = false;
+                                for (com.google.mlkit.vision.objects.DetectedObject obj : detectedObjects) {
+                                    if (obj.getLabels().isEmpty()) continue;
+                                    String label = obj.getLabels().get(0).getText();
+                                    Log.d("ObjectDetection", "Detected: " + label);
+                                    if (label.equals("table")) {
+                                        foundTargetObject = true;
+                                        break;
+                                    }
+                                }
+
+                                if (foundTargetObject) {
+                                    SharedPreferences prefs = activity.getSharedPreferences("puzzle", Context.MODE_PRIVATE);
+                                    prefs.edit().putBoolean("puzzleCompleted", true).apply();
+                                    Log.d("ObjectDetection", "puzzleCompleted set to true");
+
+                                    EditText answerInput = activity.findViewById(R.id.answerInput);
+                                    answerInput.setText("144");
+
+                                    Log.d("ObjectDetection", "About to call completePuzzle, activity is: " + activity);
+                                    try {
+                                        activity.completePuzzle();
+                                        Log.d("ObjectDetection", "completePuzzle() called successfully");
+                                    } catch (Exception completePuzzleException) {
+                                        Log.e("ObjectDetection", "Error calling completePuzzle: " + completePuzzleException.getMessage());
+                                        completePuzzleException.printStackTrace();
+                                    }
+                                }
+
                                 SharedPreferences prefs = activity.getSharedPreferences("puzzle", Context.MODE_PRIVATE);
                                 prefs.edit().putBoolean("puzzleCompleted", true).apply();
                                 Log.d("ObjectDetection", "puzzleCompleted set to true");
