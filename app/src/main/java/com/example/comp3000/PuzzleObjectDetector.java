@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.lifecycle.ProcessCameraProvider;
@@ -37,13 +36,13 @@ public class PuzzleObjectDetector {
 
                 ImageAnalysis imageAnalysis = new ImageAnalysis.Builder().build();
                 imageAnalysis.setAnalyzer(Executors.newSingleThreadExecutor(), imageProxy -> {
-                    //Log.d("ObjectDetection", "Frame received");
+                    Log.d("ObjectDetection", "Frame received");
                     InputImage inputImage = InputImage.fromMediaImage(imageProxy.getImage(), imageProxy.getImageInfo().getRotationDegrees());
 
                     ObjectDetector detector = ObjectDetection.getClient(ObjectDetectorOptions.DEFAULT_OPTIONS);
                     detector.process(inputImage).addOnSuccessListener(detectedObjects -> {
                         Log.d("ObjectDetection", "Objects detected: " + detectedObjects.size());
-                        //Log.d("ObjectDetection", "isEmpty check: " + detectedObjects.isEmpty());
+                        Log.d("ObjectDetection", "isEmpty check: " + detectedObjects.isEmpty());
 
                         try {
                             if (!detectedObjects.isEmpty()) {
@@ -77,7 +76,6 @@ public class PuzzleObjectDetector {
                                     }
                                 }
 
-                                //SharedPreferences prefs = activity.getSharedPreferences("puzzle", Context.MODE_PRIVATE);
                                 puzzleObject.edit().putBoolean("puzzleCompleted", true).apply();
                                 Log.d("ObjectDetection", "puzzleCompleted set to true");
 
