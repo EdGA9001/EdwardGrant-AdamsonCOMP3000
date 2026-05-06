@@ -26,14 +26,14 @@ public class PuzzlesActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.CAMERA}, 2);
         }
-
         PuzzleObjectDetector.start(this);
-
     }
 
-    //checks if puzzle is completed, then stops the alarm
-    private void completePuzzle() {
+    public void completePuzzle() {
         Log.d("puzzleCompletionCheck", "submitted answer!");
+
+        SharedPreferences prefs = getSharedPreferences("puzzle", MODE_PRIVATE);
+        boolean puzzleCompleted = prefs.getBoolean("puzzleCompleted", false);
 
         EditText answerInput = findViewById(R.id.answerInput);
         TextView title = findViewById(R.id.puzzlePageTitle);
@@ -41,15 +41,19 @@ public class PuzzlesActivity extends AppCompatActivity {
         int answer = Integer.parseInt(answerInput.getText().toString());
         boolean correct = (answer == 144);
 
-        title.setText(String.valueOf(correct));
+        title.setText(String.valueOf(puzzleCompleted));
+
         if (correct) {
-            SharedPreferences prefs = getSharedPreferences("puzzle", MODE_PRIVATE);
             prefs.edit().putBoolean("puzzleCompleted", true).apply();
 
             if (AlarmReceiver.mediaPlayer != null) {
                 AlarmReceiver.mediaPlayer.stop();
                 AlarmReceiver.mediaPlayer.release();
+                Log.d("puzzleCompletion", "Solved, alarm turning off!");
             }
+        }
+        else{
+            Log.d("puzzleCompletion", "Failed, alarm staying on!");
         }
     }
 }
