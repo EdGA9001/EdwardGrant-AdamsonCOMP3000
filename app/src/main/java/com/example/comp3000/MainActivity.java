@@ -1,4 +1,5 @@
 package com.example.comp3000;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity{
     PendingIntent pendingIntent;
     AlarmManager alarmManager;
 
-    private long displayTime = -1;
+    //private long displayTime = -1;
 
     private final ArrayList<Long> alarmTimes = new ArrayList<>(Collections.singletonList(-1L));
 
@@ -42,6 +43,13 @@ public class MainActivity extends AppCompatActivity{
 
         alarmTimePicker = findViewById(R.id.timePicker);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        SharedPreferences prefs = getSharedPreferences("alarms", MODE_PRIVATE);
+        long savedTime = prefs.getLong("alarmTime", -1);
+        if (savedTime != -1) {
+            alarmTimes.add(0, savedTime);
+            updateAlarmList(new ArrayList<>(Collections.singletonList(formatAlarmTime(savedTime))));
+        }
 
         requestNotificationPermission();
     }
@@ -106,6 +114,9 @@ public class MainActivity extends AppCompatActivity{
         Intent intent = new Intent(this, AlarmReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(this, (int) time, intent, PendingIntent.FLAG_IMMUTABLE);
         alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+
+        SharedPreferences prefs = getSharedPreferences("alarms", MODE_PRIVATE);
+        prefs.edit().putLong("alarmTime", time).apply();
 
         new Thread(() -> {
             ArrayList<String> formattedTimes = new ArrayList<>();
