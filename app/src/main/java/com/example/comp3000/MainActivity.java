@@ -7,6 +7,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -50,6 +51,22 @@ public class MainActivity extends AppCompatActivity{
         }
 
         requestNotificationPermission();
+        updateScreenTime();
+        ScreentimeTracker.registerReceiver(this);
+        ScreentimeTracker.lastScreenOffTime = System.currentTimeMillis() - (1000);
+        updateScreenTime();
+    }
+
+    private void updateScreenTime() {
+        LinearLayout screenText = findViewById(R.id.recentScreentimeDisplay);
+        TextView textView = (TextView) screenText.getChildAt(1);
+        textView.setText(ScreentimeTracker.getScreenTimeText());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateScreenTime();
     }
 
     private void requestNotificationPermission() {
@@ -104,7 +121,6 @@ public class MainActivity extends AppCompatActivity{
                 .setNegativeButton("Cancel", (d, w) -> btn.setChecked(false))
                 .show();
     }
-
 
     private void setAlarm(String formattedTime, long time) {
         Toast.makeText(this, "ALARM ON: " + formattedTime, Toast.LENGTH_SHORT).show();
