@@ -15,7 +15,7 @@ public class AlarmDismissReceiver extends BroadcastReceiver {
         SharedPreferences prefs = context.getSharedPreferences("puzzle", Context.MODE_PRIVATE);
         boolean puzzleCompleted = prefs.getBoolean("puzzleCompleted", false);
 
-        //once I've actually implemented a puzzle submit button this needs to be a while AFTER opening puzzle activity
+        //checks puzzle completion then removes notification and alarm sound
         if (puzzleCompleted) {
             NotificationManager notificationManager =
                     context.getSystemService(NotificationManager.class);
@@ -25,7 +25,6 @@ public class AlarmDismissReceiver extends BroadcastReceiver {
             AlarmReceiver.mediaPlayer.release();
             AlarmReceiver.mediaPlayer = null;
         }
-
 
         //open PuzzlesActivity
         Intent puzzleIntent = new Intent(context, PuzzlesActivity.class);

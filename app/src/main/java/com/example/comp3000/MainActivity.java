@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity{
         for (String timeStr : formattedTimes) {
             Button btn = new Button(this);
             btn.setText(timeStr);
-            alarmList.addView(btn); 
+            alarmList.addView(btn);
         }
     }
 }
