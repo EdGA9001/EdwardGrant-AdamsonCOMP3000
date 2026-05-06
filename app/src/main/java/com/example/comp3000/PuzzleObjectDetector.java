@@ -3,6 +3,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
@@ -21,6 +22,12 @@ public class PuzzleObjectDetector {
     public static void start(PuzzlesActivity activity) {
         com.google.common.util.concurrent.ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(activity);
 
+        SharedPreferences puzzleObject = activity.getSharedPreferences("puzzle", Context.MODE_PRIVATE);
+        String targetObject = puzzleObject.getString("targetObject", "table");
+
+        TextView targetObjectView = activity.findViewById(R.id.targetObjectView);
+        targetObjectView.setText("Find a: " + targetObject);
+
         cameraProviderFuture.addListener(() -> {
             try {
                 ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
@@ -30,13 +37,13 @@ public class PuzzleObjectDetector {
 
                 ImageAnalysis imageAnalysis = new ImageAnalysis.Builder().build();
                 imageAnalysis.setAnalyzer(Executors.newSingleThreadExecutor(), imageProxy -> {
-                    Log.d("ObjectDetection", "Frame received");
+                    //Log.d("ObjectDetection", "Frame received");
                     InputImage inputImage = InputImage.fromMediaImage(imageProxy.getImage(), imageProxy.getImageInfo().getRotationDegrees());
 
                     ObjectDetector detector = ObjectDetection.getClient(ObjectDetectorOptions.DEFAULT_OPTIONS);
                     detector.process(inputImage).addOnSuccessListener(detectedObjects -> {
                         Log.d("ObjectDetection", "Objects detected: " + detectedObjects.size());
-                        Log.d("ObjectDetection", "isEmpty check: " + detectedObjects.isEmpty());
+                        //Log.d("ObjectDetection", "isEmpty check: " + detectedObjects.isEmpty());
 
                         try {
                             if (!detectedObjects.isEmpty()) {
@@ -46,7 +53,7 @@ public class PuzzleObjectDetector {
                                     if (obj.getLabels().isEmpty()) continue;
                                     String label = obj.getLabels().get(0).getText();
                                     Log.d("ObjectDetection", "Detected: " + label);
-                                    if (label.equals("table")) {
+                                    if (label.equals(targetObject)) {
                                         foundTargetObject = true;
                                         break;
                                     }
@@ -54,7 +61,7 @@ public class PuzzleObjectDetector {
 
                                 if (foundTargetObject) {
                                     SharedPreferences prefs = activity.getSharedPreferences("puzzle", Context.MODE_PRIVATE);
-                                    prefs.edit().putBoolean("puzzleCompleted", true).apply();
+                                    puzzleObject.edit().putBoolean("puzzleCompleted", true).apply();
                                     Log.d("ObjectDetection", "puzzleCompleted set to true");
 
                                     EditText answerInput = activity.findViewById(R.id.answerInput);
@@ -70,8 +77,8 @@ public class PuzzleObjectDetector {
                                     }
                                 }
 
-                                SharedPreferences prefs = activity.getSharedPreferences("puzzle", Context.MODE_PRIVATE);
-                                prefs.edit().putBoolean("puzzleCompleted", true).apply();
+                                //SharedPreferences prefs = activity.getSharedPreferences("puzzle", Context.MODE_PRIVATE);
+                                puzzleObject.edit().putBoolean("puzzleCompleted", true).apply();
                                 Log.d("ObjectDetection", "puzzleCompleted set to true");
 
                                 //this is a proof of concept to show that yes, once an object is

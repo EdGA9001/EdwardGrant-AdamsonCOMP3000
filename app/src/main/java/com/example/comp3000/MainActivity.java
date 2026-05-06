@@ -1,9 +1,5 @@
 package com.example.comp3000;
 import android.content.SharedPreferences;
-import android.media.MediaPlayer;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Button;
@@ -26,13 +22,15 @@ import java.util.Collections;
 import androidx.appcompat.app.AlertDialog;
 import android.widget.LinearLayout;
 import android.media.MediaPlayer;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.content.Context;
 
 public class MainActivity extends AppCompatActivity{
     TimePicker alarmTimePicker;
     PendingIntent pendingIntent;
     AlarmManager alarmManager;
-
-    //private long displayTime = -1;
 
     private final ArrayList<Long> alarmTimes = new ArrayList<>(Collections.singletonList(-1L));
 
