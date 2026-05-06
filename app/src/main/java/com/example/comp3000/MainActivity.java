@@ -75,9 +75,11 @@ public class MainActivity extends AppCompatActivity{
             return;
         }
 
+        //works with limit >1 but this is a dynamic alarm
+        //Hence the goal is to make 1 alarm work where 5 would fail for now
         alarmTimes.add(0, time);
-        if (alarmTimes.size() > 5) {
-            alarmTimes.remove(5);
+        if (alarmTimes.size() > 1) {
+            alarmTimes.remove(1);
         }
         String formattedTime = formatAlarmTime(time);
         showConfirmDialog(formattedTime, time, null);
