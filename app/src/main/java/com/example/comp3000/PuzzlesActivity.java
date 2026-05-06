@@ -30,6 +30,11 @@ public class PuzzlesActivity extends AppCompatActivity {
         if (correct) {
             SharedPreferences prefs = getSharedPreferences("puzzle", MODE_PRIVATE);
             prefs.edit().putBoolean("puzzleCompleted", true).apply();
+
+            if (AlarmReceiver.mediaPlayer != null) {
+                AlarmReceiver.mediaPlayer.stop();
+                AlarmReceiver.mediaPlayer.release();
+            }
         }
     }
 }

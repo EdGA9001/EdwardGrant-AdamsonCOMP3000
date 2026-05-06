@@ -6,21 +6,26 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 
 public class AlarmDismissReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        //check for puzzle completion
+        //puzzle completion check
         SharedPreferences prefs = context.getSharedPreferences("puzzle", Context.MODE_PRIVATE);
         boolean puzzleCompleted = prefs.getBoolean("puzzleCompleted", false);
 
         //once I've actually implemented a puzzle submit button this needs to be a while AFTER opening puzzle activity
         if (puzzleCompleted) {
-            //dismisses notification
             NotificationManager notificationManager =
                     context.getSystemService(NotificationManager.class);
             notificationManager.cancel(1);
+
+            AlarmReceiver.mediaPlayer.stop();
+            AlarmReceiver.mediaPlayer.release();
+            AlarmReceiver.mediaPlayer = null;
         }
+
 
         //open PuzzlesActivity
         Intent puzzleIntent = new Intent(context, PuzzlesActivity.class);

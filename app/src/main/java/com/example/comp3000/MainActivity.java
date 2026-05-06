@@ -44,9 +44,6 @@ public class MainActivity extends AppCompatActivity{
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         requestNotificationPermission();
-
-        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.alarm);
-        mediaPlayer.start();
     }
 
     private void requestNotificationPermission() {
