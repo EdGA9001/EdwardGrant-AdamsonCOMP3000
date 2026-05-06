@@ -1,4 +1,5 @@
 package com.example.comp3000;
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,16 +17,41 @@ import android.util.Log;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-//note: for testing purposes alarm may go off up to 2 mins late before code changes need reverting
+import java.lang.ref.WeakReference;
+
+//note: for testing purposes alarm may go off 1 min late before code changes need reverting
 public class AlarmReceiver extends BroadcastReceiver {
-
     public static MediaPlayer mediaPlayer;
+    public static WeakReference<MainActivity> mainActivity;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("AlarmReceiver", "Alarm fired!");
 
+        //the values here are very short for demonstration purposes as a 6 hour demo of having a
+        // users screen off before showing them they can wait an extra 90 minutes for an alarm
+        // isn't exactly exciting or practical.
+        long elapsed = System.currentTimeMillis() - ScreentimeTracker.lastScreenOffTime;
+        if (elapsed < 20 * 1000) {
+            Log.d("AlarmReceiver", "Screen on recently, rescheduling +60 seconds");
+            long newTime = System.currentTimeMillis() + (60 * 1000);
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 1, intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+            alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, newTime, pendingIntent);
+
+            if (mainActivity.get() != null) {
+                mainActivity.get().updateAlarmList(mainActivity.get().getFormattedTimes());
+            }
+            return;
+        }
+
+        //updates the alarmTimeDisplayed
+        //updateAlarmList()
+
+        //if the screen wasn't on recently - proceeds as normal
         new Thread(() -> {
             NotificationChannel channel = new NotificationChannel("alarm_channel", "Alarm", NotificationManager.IMPORTANCE_HIGH);
             context.getSystemService(NotificationManager.class).createNotificationChannel(channel);
@@ -40,10 +66,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                     .setContentText("Wakey wakey!")
                     .addAction(0, "Dismiss", puzzlePending);
 
-            //android studio doesn't like this, as long as the user gets the perm dialogue it's OK
             NotificationManagerCompat.from(context).notify(1, builder.build());
 
-            //start playing CC alarm sound
             if (mediaPlayer != null) {
                 mediaPlayer.stop();
             }

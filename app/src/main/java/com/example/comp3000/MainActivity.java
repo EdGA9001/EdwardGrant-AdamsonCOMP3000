@@ -1,4 +1,6 @@
 package com.example.comp3000;
+import android.content.BroadcastReceiver;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +13,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import java.lang.ref.WeakReference;
 import java.util.Calendar;
 import androidx.core.app.ActivityCompat;
 import android.Manifest;
@@ -21,6 +25,8 @@ import java.util.Date;
 import java.util.ArrayList;
 import java.util.Collections;
 import androidx.appcompat.app.AlertDialog;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import android.widget.LinearLayout;
 import android.media.MediaPlayer;
 import android.media.Ringtone;
@@ -42,6 +48,7 @@ public class MainActivity extends AppCompatActivity{
 
         alarmTimePicker = findViewById(R.id.timePicker);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        AlarmReceiver.mainActivity = new WeakReference<>(this);
 
         SharedPreferences prefs = getSharedPreferences("alarms", MODE_PRIVATE);
         long savedTime = prefs.getLong("alarmTime", -1);
@@ -56,6 +63,15 @@ public class MainActivity extends AppCompatActivity{
         ScreentimeTracker.lastScreenOffTime = System.currentTimeMillis() - (1000);
         updateScreenTime();
     }
+
+    public ArrayList<String> getFormattedTimes() {
+        ArrayList<String> formatted = new ArrayList<>();
+        for (Long time : alarmTimes) {
+            formatted.add(formatAlarmTime(time));
+        }
+        return formatted;
+    }
+
 
     private void updateScreenTime() {
         LinearLayout screenText = findViewById(R.id.recentScreentimeDisplay);
@@ -145,7 +161,7 @@ public class MainActivity extends AppCompatActivity{
             });
         }).start();
     }
-    private void updateAlarmList(ArrayList<String> formattedTimes) {
+    public void updateAlarmList(ArrayList<String> formattedTimes) {
         LinearLayout alarmList = findViewById(R.id.alarmListContainer);
         alarmList.removeAllViews();
         for (String timeStr : formattedTimes) {

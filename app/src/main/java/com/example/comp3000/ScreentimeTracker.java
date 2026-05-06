@@ -9,8 +9,6 @@ import android.util.Log;
 
 public class ScreentimeTracker extends BroadcastReceiver {
     public static long lastScreenOffTime = 0;
-    private static Handler handler = new Handler(Looper.getMainLooper());
-    private static Runnable updateRunnable;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -25,21 +23,6 @@ public class ScreentimeTracker extends BroadcastReceiver {
         filter.addAction(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         context.registerReceiver(new ScreentimeTracker(), filter);
-    }
-
-    public static void startPeriodicUpdates(Runnable refreshCallback) {
-        updateRunnable = new Runnable() {
-            @Override
-            public void run() {
-                refreshCallback.run();
-                handler.postDelayed(this, 2 * 60 * 1000);
-            }
-        };
-        handler.post(updateRunnable);
-    }
-
-    public static void stopPeriodicUpdates() {
-        if (updateRunnable != null) handler.removeCallbacks(updateRunnable);
     }
 
     public static String getScreenTimeText() {
