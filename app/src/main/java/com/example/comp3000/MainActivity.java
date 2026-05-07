@@ -2,6 +2,9 @@ package com.example.comp3000;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.Button;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -11,7 +14,14 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Calendar;
 import androidx.core.app.ActivityCompat;
 import android.Manifest;
@@ -49,7 +59,7 @@ public class MainActivity extends AppCompatActivity{
         AlarmReceiver.mainActivity = new WeakReference<>(this);
 
         SharedPreferences prefs = getSharedPreferences("alarms", MODE_PRIVATE);
-        //NTS - check if I'm being a dumb dumb - next 2 lines seem redundant
+        //NTS - check if I'm being silly - next 2 lines seem redundant
         long savedTime = prefs.getLong("alarmTime", -1);
         if (savedTime != -1) {
             alarmTimes.add(0, savedTime);
@@ -61,6 +71,28 @@ public class MainActivity extends AppCompatActivity{
         ScreentimeTracker.registerReceiver(this);
         ScreentimeTracker.lastScreenOffTime = System.currentTimeMillis() - (1000);
         updateScreenTime();
+
+        recentHeartText = findViewById(R.id.recentHeartText);
+
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                new Thread(() -> {
+                    try {
+                        URL url = new URL("http://10.0.2.2:8000/heartrate");
+                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                        String value = reader.readLine();
+                        reader.close();
+                        handler.post(() -> recentHeartText.setText("Recent heart activity: " + value + " BPM"));
+                    } catch (Exception e) {
+                        handler.post(() -> recentHeartText.setText("Error: " + e.getMessage()));
+                    }
+                }).start();
+                handler.postDelayed(this, 1000);
+            }
+        }, 1000);
     }
 
     //integrate into getFormmatedTimes? Worth refactoring

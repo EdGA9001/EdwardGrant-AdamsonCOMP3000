@@ -26,6 +26,9 @@ public class AlarmReceiver extends BroadcastReceiver {
     public static MediaPlayer mediaPlayer;
     public static WeakReference<MainActivity> mainActivity;
 
+    private static boolean hasDelayed = false;
+    private static long lastDelayed = System.currentTimeMillis();
+
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("AlarmReceiver", "Alarm fired!");
@@ -34,12 +37,21 @@ public class AlarmReceiver extends BroadcastReceiver {
         // users screen off before showing them they can wait an extra 90 minutes for an alarm
         // isn't exactly exciting or practical.
         long elapsed = System.currentTimeMillis() - ScreentimeTracker.lastScreenOffTime;
-        ArduinoHeartReader.readHRValue();
+        new Thread(() -> {
+            ArduinoHeartReader.readHRValue(context);
+        }).start();
+        try { Thread.sleep(3000); } catch (InterruptedException e) {}
         int hrValue = ArduinoHeartReader.recentHeartRate;
 
-        if (elapsed < 10 * 1000 || hrValue > 80) {
+        Log.d("AlarmReceiver", "elapsed: " + elapsed + " ms, hrValue: " + hrValue);
+        Log.d("AlarmReceiver", "Condition met: " + (elapsed < 10 * 1000 || hrValue > 80));
+
+        if ((elapsed < 10 * 1000 || hrValue > 80) && (!hasDelayed || (System.currentTimeMillis() - lastDelayed) > 20 * 60 * 60 * 1000)) {
+            hasDelayed = true;
+            Log.d("AlarmReceiver", String.valueOf(hasDelayed));
+            lastDelayed = System.currentTimeMillis();
             long newTime = System.currentTimeMillis() + (60 * 1000);
-            Log.d("AlarmReceiver", "Recent screen or HR activity, rescheduling +" + newTime/60000 + " minutes");
+            Log.d("AlarmReceiver", "Recent screen or HR activity, rescheduling +" + (newTime-System.currentTimeMillis())/60000 + " minutes");
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 1, intent,
                     PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
@@ -55,7 +67,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             Log.d("AlarmReceiver", "Did not reschedule alarm");
         }
 
-        //if the screen wasn't on recently - proceeds as normal 
+        //if the screen wasn't on recently - proceeds as normal
         new Thread(() -> {
             NotificationChannel channel = new NotificationChannel("alarm_channel", "Alarm", NotificationManager.IMPORTANCE_HIGH);
             context.getSystemService(NotificationManager.class).createNotificationChannel(channel);
