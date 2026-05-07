@@ -23,6 +23,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import androidx.appcompat.app.AlertDialog;
 import android.widget.LinearLayout;
+import android.app.AlarmManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 
 public class MainActivity extends AppCompatActivity{
     TimePicker alarmTimePicker;
@@ -135,6 +140,8 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void setAlarm(String formattedTime, long time) {
+        Log.d("setAlarm", "Alarm set!");
+
         Toast.makeText(this, "ALARM ON: " + formattedTime, Toast.LENGTH_SHORT).show();
         if (System.currentTimeMillis() > time) time += 24 * 60 * 60 * 1000;
         Intent intent = new Intent(this, AlarmReceiver.class);
