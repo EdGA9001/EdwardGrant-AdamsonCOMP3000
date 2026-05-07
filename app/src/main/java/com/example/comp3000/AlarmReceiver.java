@@ -55,7 +55,6 @@ public class AlarmReceiver extends BroadcastReceiver {
             Log.d("AlarmReceiver", "Did not reschedule alarm");
         }
 
-
         //if the screen wasn't on recently - proceeds as normal
         new Thread(() -> {
             NotificationChannel channel = new NotificationChannel("alarm_channel", "Alarm", NotificationManager.IMPORTANCE_HIGH);
