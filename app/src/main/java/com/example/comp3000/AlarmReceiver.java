@@ -39,7 +39,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         if (elapsed < 10 * 1000 || hrValue > 80) {
             long newTime = System.currentTimeMillis() + (60 * 1000);
-            Log.d("AlarmReceiver", "Screen on recently, rescheduling +" + newTime/60000 + " minutes");
+            Log.d("AlarmReceiver", "Recent screen or HR activity, rescheduling +" + newTime/60000 + " minutes");
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 1, intent,
                     PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
@@ -50,6 +50,12 @@ public class AlarmReceiver extends BroadcastReceiver {
             }
             return;
         }
+        /*
+        else{
+            Log.d("AlarmReceiver", "Did not reschedule alarm");
+            continue;
+        }
+        */
 
         //updates the alarmTimeDisplayed
         //updateAlarmList()
