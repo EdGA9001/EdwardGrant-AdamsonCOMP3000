@@ -50,12 +50,11 @@ public class AlarmReceiver extends BroadcastReceiver {
             }
             return;
         }
-        /*
+
         else{
             Log.d("AlarmReceiver", "Did not reschedule alarm");
-            continue;
         }
-        */
+
 
         //if the screen wasn't on recently - proceeds as normal
         new Thread(() -> {
