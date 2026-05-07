@@ -1,6 +1,4 @@
 package com.example.comp3000;
-import android.content.BroadcastReceiver;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,7 +11,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
 import java.lang.ref.WeakReference;
 import java.util.Calendar;
 import androidx.core.app.ActivityCompat;
@@ -25,14 +22,7 @@ import java.util.Date;
 import java.util.ArrayList;
 import java.util.Collections;
 import androidx.appcompat.app.AlertDialog;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 import android.widget.LinearLayout;
-import android.media.MediaPlayer;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.content.Context;
 
 public class MainActivity extends AppCompatActivity{
     TimePicker alarmTimePicker;
@@ -54,6 +44,7 @@ public class MainActivity extends AppCompatActivity{
         AlarmReceiver.mainActivity = new WeakReference<>(this);
 
         SharedPreferences prefs = getSharedPreferences("alarms", MODE_PRIVATE);
+        //NTS - check if I'm being a dumb dumb - next 2 lines seem redundant
         long savedTime = prefs.getLong("alarmTime", -1);
         if (savedTime != -1) {
             alarmTimes.add(0, savedTime);
@@ -62,10 +53,14 @@ public class MainActivity extends AppCompatActivity{
         }
 
         requestNotificationPermission();
-        updateScreenTime();
         ScreentimeTracker.registerReceiver(this);
         ScreentimeTracker.lastScreenOffTime = System.currentTimeMillis() - (1000);
         updateScreenTime();
+    }
+
+    //integrate into getFormmatedTimes? Worth refactoring
+    private String formatAlarmTime(long alarmTimeMillis) {
+        return android.text.format.DateFormat.getTimeFormat(this).format(new Date(alarmTimeMillis));
     }
 
     public ArrayList<String> getFormattedTimes() {
@@ -75,7 +70,6 @@ public class MainActivity extends AppCompatActivity{
         }
         return formatted;
     }
-
 
     private void updateScreenTime() {
         LinearLayout screenText = findViewById(R.id.recentScreentimeDisplay);
@@ -89,6 +83,7 @@ public class MainActivity extends AppCompatActivity{
         updateScreenTime();
     }
 
+    //on first launch - asks for notification permission
     private void requestNotificationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -98,16 +93,13 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             Log.d("Permission", "Notification permission granted");
         }
-    }
-
-    private String formatAlarmTime(long alarmTimeMillis) {
-        return android.text.format.DateFormat.getTimeFormat(this).format(new Date(alarmTimeMillis));
     }
 
     public void OnToggleClicked(View view) {
