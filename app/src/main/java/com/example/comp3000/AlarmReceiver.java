@@ -34,9 +34,12 @@ public class AlarmReceiver extends BroadcastReceiver {
         // users screen off before showing them they can wait an extra 90 minutes for an alarm
         // isn't exactly exciting or practical.
         long elapsed = System.currentTimeMillis() - ScreentimeTracker.lastScreenOffTime;
-        if (elapsed < 20 * 1000) {
-            Log.d("AlarmReceiver", "Screen on recently, rescheduling +60 seconds");
+        ArduinoHeartReader.readHRValue();
+        int hrValue = ArduinoHeartReader.recentHeartRate;
+
+        if (elapsed < 10 * 1000 || hrValue > 80) {
             long newTime = System.currentTimeMillis() + (60 * 1000);
+            Log.d("AlarmReceiver", "Screen on recently, rescheduling +" + newTime/60000 + " minutes");
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 1, intent,
                     PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);

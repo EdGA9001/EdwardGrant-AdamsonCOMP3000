@@ -38,13 +38,16 @@ public class MainActivity extends AppCompatActivity{
     TimePicker alarmTimePicker;
     PendingIntent pendingIntent;
     AlarmManager alarmManager;
-
+    private TextView recentHeartText;
     private final ArrayList<Long> alarmTimes = new ArrayList<>(Collections.singletonList(-1L));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_main);
+
+        recentHeartText = findViewById(R.id.recentHeartText);
+        recentHeartText.setText("Recent heart activity: " + ArduinoHeartReader.getHeartRateText());
 
         alarmTimePicker = findViewById(R.id.timePicker);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -55,6 +58,7 @@ public class MainActivity extends AppCompatActivity{
         if (savedTime != -1) {
             alarmTimes.add(0, savedTime);
             updateAlarmList(new ArrayList<>(Collections.singletonList(formatAlarmTime(savedTime))));
+
         }
 
         requestNotificationPermission();
