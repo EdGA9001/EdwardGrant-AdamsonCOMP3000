@@ -1,3 +1,3 @@
 ﻿# COMP3000-FINAL
 
-Precursor repository: https://github.com/EdGA9001/COMP3000
+Precursor repository (insubstantial): https://github.com/EdGA9001/COMP3000
