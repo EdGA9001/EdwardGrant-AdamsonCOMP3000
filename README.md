@@ -1,6 +1,6 @@
 Late bird (COMP3000 Project)
 
-Allocated supervisor: Girdhar (Was Vassilis)
+Allocated supervisor: Dr. Nancy Girdhar (previously Vassilis Cutsuridis)
 
 #Project vision:
 
